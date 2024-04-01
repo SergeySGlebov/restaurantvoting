@@ -1,28 +1,30 @@
 package ru.ssglebov.restaurantvoting.model;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.Objects;
 
+@Embeddable
 public class Dish {
 
+    @NotNull
     private String name;
+
+    @NotBlank
     private BigDecimal price;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Menu menu;
 
     public Dish(String name, BigDecimal price) {
         this.name = name;
         this.price = price;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Dish dish = (Dish) o;
-        return Objects.equals(name, dish.name) && Objects.equals(price, dish.price);
+    public Dish() {
+
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, price);
-    }
+
 }

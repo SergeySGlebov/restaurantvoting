@@ -1,11 +1,28 @@
 package ru.ssglebov.restaurantvoting.model;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+@NamedQueries({
+        @NamedQuery(name = Vote.GET_VOTE_OF_DAY, query = "SELECT v FROM Vote v WHERE v.date=?1")
+})
+@Entity
+@Table(name = "vote")
 public class Vote extends AbstractBaseEntity {
 
+    public static final String GET_VOTE_OF_DAY = "Vote.getVoteOfDay";
+
+    @NotNull
+    @Column(name = "date")
     private LocalDate date;
+
+    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
+
+    @JoinColumn(name = "restaurant_id")
+    @ManyToOne(fetch = FetchType.EAGER)
     private Restaurant restaurant;
 
     public Vote(LocalDate date, User user, Restaurant restaurant) {
@@ -17,6 +34,10 @@ public class Vote extends AbstractBaseEntity {
         this.date = date;
         this.user = user;
         this.restaurant = restaurant;
+    }
+
+    public Vote() {
+
     }
 
     public LocalDate getDate() {
