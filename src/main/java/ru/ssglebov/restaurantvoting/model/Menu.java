@@ -25,9 +25,9 @@ public class Menu extends AbstractBaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private Restaurant restaurant;
 
-    @CollectionTable(name = "dish", joinColumns = @JoinColumn(name = "menu_id"),
-            uniqueConstraints = {@UniqueConstraint(columnNames = {"menu_id", "name"}, name = "menu_date_idx")})
-    @ElementCollection(fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "menu_id", nullable = false)
+    @OrderBy("id ASC")
     private List<Dish> dishes;
 
     public Menu(LocalDate date, Restaurant restaurant, List<Dish> dishes) {

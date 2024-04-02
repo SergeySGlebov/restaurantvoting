@@ -40,6 +40,10 @@ public class Vote extends AbstractBaseEntity {
 
     }
 
+    public Vote(Vote v) {
+        this(v.getId(), v.getDate(), v.getUser(), v.getRestaurant());
+    }
+
     public LocalDate getDate() {
         return date;
     }

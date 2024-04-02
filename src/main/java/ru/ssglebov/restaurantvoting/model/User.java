@@ -5,17 +5,21 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @NamedQueries({
-        @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id")
+        @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id"),
+        @NamedQuery(name = User.BY_EMAIL, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=?1"),
 })
 @Entity
 @Table(name = "users")
 public class User extends AbstractNamedEntity {
 
     public static final String DELETE = "User.delete";
+    public static final String BY_EMAIL = "User.getByEmail";
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
@@ -53,6 +57,17 @@ public class User extends AbstractNamedEntity {
 
     public User() {
 
+    }
+
+    public User(int id, String name, String email, String password, Role role) {
+        this(id, name, email, password, true, new Date(), new HashSet<>(role.ordinal()));
+    }
+
+    public User(Integer id, String name, String email, String password, Role... roles) {
+        this(id, name, email, password, true, new Date(), new HashSet<>(Arrays.asList(roles)));
+    }
+    public User(User u) {
+        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.isEnabled(), u.getRegistered(), u.getRoles());
     }
 
     public String getEmail() {

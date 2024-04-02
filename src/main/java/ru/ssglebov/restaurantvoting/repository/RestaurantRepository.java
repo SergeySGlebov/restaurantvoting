@@ -2,6 +2,7 @@ package ru.ssglebov.restaurantvoting.repository;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.ssglebov.restaurantvoting.model.Menu;
 import ru.ssglebov.restaurantvoting.model.Restaurant;
 import ru.ssglebov.restaurantvoting.model.Vote;
 
@@ -54,6 +55,26 @@ public class RestaurantRepository {
 
     public List<Vote> getVoteOfDay(LocalDate localDate) {
         return em.createNamedQuery(Vote.GET_VOTE_OF_DAY, Vote.class)
+                .setParameter(1, localDate)
+                .getResultList();
+    }
+
+    @Transactional
+    public Menu saveMenu(Menu menu) {
+        if (menu.isNew()) {
+            em.persist(menu);
+            return menu;
+        } else {
+            return em.merge(menu);
+        }
+    }
+
+    public Menu getMenu(int id) {
+        return em.find(Menu.class, id);
+    }
+
+    public List<Menu> getMenuOfDay(LocalDate localDate) {
+        return em.createNamedQuery(Menu.GET_MENU_OF_DAY, Menu.class)
                 .setParameter(1, localDate)
                 .getResultList();
     }
